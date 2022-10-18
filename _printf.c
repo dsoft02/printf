@@ -2,51 +2,47 @@
 
 /**
  * _printf - produces output according to a format
- * @format: input string
- * Return: number of characters printed
+ * @format: format string containing the characters and the specifiers
+ * Description: this function will call the select_printf() function that will
+ * determine which printing function to call depending on the format specified
+ * 
+ * Return: length of the formatted output string
  */
 int _printf(const char *format, ...)
 {
-	unsigned int i = 0, len = 0, buf = 0;
-	va_list args;
-	int (*function)(va_list, char *, unsigned int);
-	char *buffer;
+    int (*print_funcs)(va_list, flags_t *);
+    const char *p;
+    va_list args;
+    flags_t flags = {0, 0, 0};
 
-	va_start(args, format), buffer = malloc(sizeof(char) * 1024);
-	if (!format || !buffer || (format[i] == '%' && !format[i + 1]))
-		return (-1);
-	if (!format[i])
-		return (0);
-	for (i = 0; format && format[i]; i++)
-	{
-		if (format[i] == '%')
-		{
-			if (format[i + 1] == '\0')
-			{
-				print_buf(buffer, buf), free(buffer), va_end(args);
-				return (-1);
-			}
-			else
-			{
-				function = get_print_func(format, i + 1);
-				if (function == NULL)
-				{
-					if (format[i + 1] == ' ' && !format[i + 2])
-						return (-1);
-					handl_buf(buffer, format[i], buf), len++, i--;
-				}
-				else
-				{
-					len += function(args, buffer, buf);
-					i += ev_print_func(fomat, i + 1);
-				}
-			} i++;
-		}
-		else
-			handl_buf(buffer, format[i], buf), len++;
-		for (buf = len; buf > 1024; buf -= 1024)
-			;
-	}
-	print_buf(buffer, buf), free(buffer), va_end(args);
-	return (len);
+    register int len = 0;
+
+    va_start(args, format);
+    if (!format || (format[0] == '%' && !format[1]))
+        return (-1);
+    if (format[0] == '%' && format[1] == ' ' && !format[2])
+        return (-1);
+    for (p = format; *p; p++)
+    {
+        if (*p == '%')
+        {
+            p++;
+            if (*p == '%')
+            {
+                len += _putchar('%');
+                continue;
+            }
+            while (check_flag(*p, &flags))
+                p++;
+            print_funcs = select_printf(*p);
+            len += (print_funcs)
+                         ? print_funcs(args, &flags)
+                         : _printf("%%%c", *p);
+        }
+        else
+            len += _putchar(*p);
+    }
+    _putchar(-1);
+    va_end(args);
+    return (len);
 }
