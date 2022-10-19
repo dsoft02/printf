@@ -36,10 +36,9 @@ int _puts(char *str)
 {
 register int i = 0;
 
-while (str[i] != '\0')
+for (i = 0; str[i] != '\0'; i++)
 {
-_putchar(str[i]);
-i++;
+	_putchar(str[i]);
 }
 return (i);
 }
