@@ -61,4 +61,4 @@ This is a team project that is aimed at understanding the concept of team work b
 
 ### Authors
 * **Ebenezer Ogidiolu** - [ogidioluebenezer@gmail.com](https://github.com/dsoft02)
-* **Tolu Ade-Ojo** - [tolexskii@gmail.com](https://github.com/tolexzkii)
+* **Tolu Ade-ojo** - [tolexskii@gmail.com](https://github.com/tolexzkii)
